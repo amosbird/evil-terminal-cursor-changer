@@ -1,4 +1,5 @@
 ;;; evil-terminal-cursor-changer.el --- Change cursor shape and color by evil state in terminal  -*- coding: utf-8; -*-
+;; Package-Version: 20171008.138
 ;;
 ;;; Commentary:
 
@@ -58,7 +59,6 @@
 ;;; Code:
 
 (require 'evil)
-(require 'color)
 
 (defun etcc--in-tmux? ()
   "Running in tmux."
@@ -69,10 +69,6 @@
   (let ((prefix "\ePtmux;\e")
         (suffix "\e\\"))
     (concat prefix seq suffix)))
-
-(defun etcc--color-name-to-hex (color)
-  "Convert color name to hex value."
-  (apply 'color-rgb-to-hex (color-name-to-rgb color)))
 
 (defun etcc--make-cursor-shape-seq (shape)
   "Make escape sequence for XTerm."
@@ -91,11 +87,12 @@
 
 (defun etcc--make-cursor-color-seq (color)
   "Make escape sequence for cursor color."
-  (let ((seq (etcc--color-name-to-hex color)))
-    (if seq
-      (if (etcc--in-tmux?)
-        (etcc--make-tmux-seq seq)
-        seq))))
+  (if color
+      (progn
+        (setq color (concat "\e]12;" color "\007"))
+        (if (etcc--in-tmux?)
+            (etcc--make-tmux-seq color)
+          color))))
 
 (defun etcc--apply-to-terminal (seq)
   "Send to escape sequence to terminal."
@@ -116,7 +113,7 @@
 (defun evil-terminal-cursor-changer-activate ()
   "Enable evil terminal cursor changer."
   (interactive)
-  ;; (ad-activate 'evil-set-cursor-color)
+  (ad-activate 'evil-set-cursor-color)
   (ad-activate 'evil-set-cursor))
 
 ;;;###autoload
@@ -126,7 +123,7 @@
 (defun evil-terminal-cursor-changer-deactivate ()
   "Disable evil terminal cursor changer."
   (interactive)
-  ;; (ad-deactivate 'evil-set-cursor-color)
+  (ad-deactivate 'evil-set-cursor-color)
   (ad-deactivate 'evil-set-cursor))
 
 ;;;###autoload
