@@ -17,7 +17,7 @@
 ;;
 ;; 2. M-x package-install RET evil-terminal-cursor-changer RET
 ;;
-;; 3. Add code to your emacs config file:（for example: ~/.emacs）：
+;; 3. Add code to your Emacs config file:（for example: ~/.emacs）：
 ;;
 ;;      (unless (display-graphic-p)
 ;;              (require 'evil-terminal-cursor-changer)
@@ -65,13 +65,13 @@
   (getenv "TMUX"))
 
 (defun etcc--make-tmux-seq (seq)
-  "Make escape sequence for tumx."
+  "Make escape sequence SEQ for tumx."
   (let ((prefix "\ePtmux;\e")
         (suffix "\e\\"))
     (concat prefix seq suffix)))
 
 (defun etcc--make-cursor-shape-seq (shape)
-  "Make escape sequence for XTerm."
+  "Make escape sequence SHAPE for XTerm."
   (if (listp shape) (setq shape (car shape)))
   (let ((cs (cond ((eq shape 'box) "2")
                   ((eq shape 'hbar) "4")
@@ -86,7 +86,7 @@
       nil)))
 
 (defun etcc--make-cursor-color-seq (color)
-  "Make escape sequence for cursor color."
+  "Make escape sequence COLOR for cursor color."
   (if color
       (progn
         (setq color (concat "\e]12;" color "\007"))
@@ -95,17 +95,21 @@
           color))))
 
 (defun etcc--apply-to-terminal (seq)
-  "Send to escape sequence to terminal."
-  (if (and seq (stringp seq))
-      (send-string-to-terminal seq)))
+  "Send to escape sequence SEQ to terminal."
+  (when (and seq (stringp seq))
+    (send-string-to-terminal seq) ;; alacritty lost
+    (send-string-to-terminal seq)))
 
 (defadvice evil-set-cursor-color (after etcc--evil-set-cursor (color))
+  "Advice `evil-set-cursor-color'."
   (unless window-system
     (etcc--apply-to-terminal (etcc--make-cursor-color-seq color))))
+
 (etcc--apply-to-terminal (etcc--make-cursor-shape-seq 'bar))
 (etcc--apply-to-terminal (etcc--make-cursor-shape-seq 'hbar))
 (etcc--apply-to-terminal (etcc--make-cursor-shape-seq 'box))
 (defadvice evil-set-cursor (after etcc--evil-set-cursor)
+  "Advice `evil-set-cursor'."
   (unless window-system
     (etcc--apply-to-terminal (etcc--make-cursor-shape-seq cursor-type))))
 
