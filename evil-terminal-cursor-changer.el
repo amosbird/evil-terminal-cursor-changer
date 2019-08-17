@@ -2,10 +2,6 @@
 ;; Package-Version: 20171008.1
 ;; Version: 0.1
 ;;
-;;; Commentary:
-
-;; [![MELPA](http://melpa.org/packages/evil-terminal-cursor-changer-badge.svg)](http://melpa.org/#/evil-terminal-cursor-changer)
-
 ;; ## Introduce ##
 ;;
 ;; evil-terminal-cursor-changer is changing cursor shape and color by evil state for evil-mode.
@@ -24,15 +20,6 @@
 ;;              (require 'evil-terminal-cursor-changer)
 ;;              (evil-terminal-cursor-changer-activate) ; or (etcc-on)
 ;;              )
-;;
-;; If want change cursor shape type, add below line. This is evil's setting.
-;;
-;;      (setq evil-motion-state-cursor 'box)  ; █
-;;      (setq evil-visual-state-cursor 'box)  ; █
-;;      (setq evil-normal-state-cursor 'box)  ; █
-;;      (setq evil-insert-state-cursor 'bar)  ; ⎸
-;;      (setq evil-emacs-state-cursor  'hbar) ; _
-;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
 ;;; Change Log:
